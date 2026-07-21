@@ -16,7 +16,7 @@ ThunderFlow is an AI-powered UI-to-Code Generator that converts UI screenshots i
 - MySQL
 
 ### AI
-- OpenAI / Groq API
+- OpenAI / GroQ API
 
 ## Features
 
