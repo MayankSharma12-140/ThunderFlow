@@ -5,10 +5,10 @@ export default defineConfig({
   plugins: [react()],
 
   server: {
-    allowedHosts: ['alluring-commitment-production-2e6f.up.railway.app'],
+    allowedHosts: ['thunderflowfrontend.up.railway.app'],
   },
 
   preview: {
-    allowedHosts: ['alluring-commitment-production-2e6f.up.railway.app'],
+    allowedHosts: ['thunderflowfrontend.up.railway.app'],
   },
 })
