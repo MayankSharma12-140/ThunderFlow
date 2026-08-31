@@ -10,13 +10,13 @@ const createProject = (
 ) => {
   const sql = `
     INSERT INTO projects
-    (user_id, title, prompt, generated_code, framework)
-    VALUES (?, ?, ?, ?, ?)
+  (user_id, title, prompt, generated_code, framework, generation_count)
+VALUES (?, ?, ?, ?, ?, ?)
   `;
 
   db.query(
     sql,
-    [user_id, title, prompt, generated_code, framework],
+    [user_id, title, prompt, generated_code, framework, 1],
     callback
   );
 };
@@ -58,11 +58,12 @@ const updateProject = (
 
     const sql = `
         UPDATE projects
-        SET title = ?,
-            prompt = ?,
-            generated_code = ?,
-            framework = ?
-        WHERE id = ? AND user_id = ?
+SET title = ?,
+    prompt = ?,
+    framework = ?,
+    generated_code = COALESCE(?, generated_code),
+    generation_count = generation_count + 1
+WHERE id = ? AND user_id = ?
     `;
 
     db.query(
@@ -70,8 +71,8 @@ const updateProject = (
         [
             title,
             prompt,
-            generated_code,
             framework,
+            generated_code,
             project_id,
             user_id,
         ],

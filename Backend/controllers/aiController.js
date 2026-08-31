@@ -1,4 +1,4 @@
-const { generateCode } = require("../services/aiService");
+const { generateCode } = require("../services/aiservice");
 
 const {
     createProject,
@@ -42,12 +42,14 @@ const {
                 });
             }
         );
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: "AI Generation Failed",
-            error: error.message,
-        });
+    }  catch (error) {
+  console.error("AI GENERATION ERROR:", error);
+
+  return res.status(500).json({
+    success: false,
+    message: "AI Generation Failed",
+    error: error.message,
+  });
     }
 };
 
@@ -57,6 +59,8 @@ const regenerateUI = async (req, res) => {
         const { instruction } = req.body;
         const project_id = req.params.id;
         const user_id = req.user.id;
+        console.log("REGENERATE PROJECT ID:", project_id);
+        console.log("REGENERATE USER ID:", user_id);
 
         if (!instruction) {
             return res.status(400).json({
@@ -65,6 +69,7 @@ const regenerateUI = async (req, res) => {
         }
 
         getProjectById(project_id, user_id, async (err, result) => {
+            console.log("PROJECT QUERY RESULT:", result);
             if (err) {
                 return res.status(500).json({
                     message: "Database Error",
@@ -100,20 +105,25 @@ ${instruction}
                 updatedPrompt,
                 generatedCode,
                 project.framework,
-                (err) => {
-                    if (err) {
-                        return res.status(500).json({
-                            message: "Database Error",
-                            error: err.message,
-                        });
-                    }
+              (err, result) => {
+    if (err) {
+        console.error("UPDATE PROJECT ERROR:", err);
+        console.error("MYSQL ERROR MESSAGE:", err.message);
 
-                    return res.status(200).json({
-                        success: true,
-                        message: "Project regenerated successfully",
-                        generatedCode,
-                    });
-                }
+        return res.status(500).json({
+            success: false,
+            message: "Database Error",
+            error: err.message
+        });
+    }
+
+    return res.status(200).json({
+        success: true,
+        message: "Project regenerated and saved successfully",
+        projectId: project.id,
+        generatedCode
+    });
+}
             );
         });
     } catch (error) {

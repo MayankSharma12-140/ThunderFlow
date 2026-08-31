@@ -7,18 +7,29 @@ const { createProject ,
     } = require("../models/projectModel");
 
 const addProject = (req, res) => {
-    const { title, prompt, generated_code, framework } = req.body;
+    const {title, prompt, generated_code, framework } = req.body;
 
     const user_id = req.user.id;
+
+    console.log("PROJECT DATA:", {
+    user_id,
+    title,
+    prompt,
+    generated_code,
+    framework
+});
 
     createProject(
         user_id,
         title,
         prompt,
-        generated_code,
-        framework,
+        generated_code|| "",
+        framework ||"React",
         (err, result) => {
             if (err) {
+
+                console.error("PROJECT DATABASE ERROR:", err);
+
                 return res.status(500).json({
                     message: "Database Error",
                     error: err.message,
@@ -101,13 +112,14 @@ const editProject = (req, res) => {
         framework,
         (err, result) => {
 
-            if (err) {
-                return res.status(500).json({
-                    message: "Database Error",
-                    error: err.message,
-                });
-            }
+           if (err) {
+    console.error("UPDATE PROJECT ERROR:", err);
 
+    return res.status(500).json({
+        message: "Database Error",
+        error: err.message
+    });
+}
             if (result.affectedRows === 0) {
                 return res.status(404).json({
                     message: "Project not found",
