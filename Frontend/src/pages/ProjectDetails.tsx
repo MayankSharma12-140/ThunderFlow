@@ -95,8 +95,7 @@ function ProjectDetails() {
   const [searchCode, setSearchCode] = useState("");
   const [showCodeSearch, setShowCodeSearch] = useState(false);
   const codeRef = useRef<HTMLPreElement>(null);
-  const [searchFound, setSearchFound] = useState<boolean | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [, setSearchFound] = useState<boolean | null>(null);
   const [regenerationInstruction, setRegenerationInstruction] = useState("");
   const [regenerating, setRegenerating] = useState(false);
 
