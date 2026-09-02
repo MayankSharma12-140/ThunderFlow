@@ -34,13 +34,28 @@ app.use(express.json());
 app.use(helmet());
 
 
-app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://thunderflowfrontend.up.railway.app"
-    ],
-    credentials: true
-}));
+
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+
+    if (
+        origin === "http://localhost:5173" ||
+        origin === "https://thunderflowfrontend.up.railway.app"
+    ) {
+        res.header("Access-Control-Allow-Origin", origin);
+    }
+
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(204);
+    }
+
+    next();
+});
+
 app.use(limiter);
 
 app.use(morgan("dev"));
