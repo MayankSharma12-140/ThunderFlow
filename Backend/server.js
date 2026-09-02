@@ -33,11 +33,14 @@ app.use(express.json());
 
 app.use(helmet());
 
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://thunderflowfrontend.up.railway.app"
+    ],
     credentials: true
 }));
-
 app.use(limiter);
 
 app.use(morgan("dev"));
